@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWDISK-ALG", "SWDISK-ALG.csproj", "{D0313E76-BD94-4353-A0D6-E00830E04655}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0313E76-BD94-4353-A0D6-E00830E04655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0313E76-BD94-4353-A0D6-E00830E04655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0313E76-BD94-4353-A0D6-E00830E04655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0313E76-BD94-4353-A0D6-E00830E04655}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
