@@ -12,6 +12,7 @@ namespace SWDISK_ALG
         private readonly double[,] _throughputMatrix;
         private double _minimalCost;
         public double Result { get; private set; }
+        public List<Coordinate> ResultPath { get; private set; }
 
         public BruteForce(List<Coordinate> coordinates, double[,] throughputMatrix)
         {
@@ -19,16 +20,9 @@ namespace SWDISK_ALG
             _minimalCost = Double.MaxValue;
             _throughputMatrix = throughputMatrix;
             GeneratePermutations(coordinates);
-            Result = Compute();
+            (Result, ResultPath) = Compute();
         }
 
-        private static void SwapCoordinates(ref List<Coordinate> list, int a, int b)
-        {
-            var tmp = list[a];
-            list[a] = list[b];
-            list[b] = tmp;
-        }
-        
         private void GeneratePermutations(List<Coordinate> coordinates)
         {
             var currentPermutation = new Coordinate[coordinates.Count];
@@ -68,17 +62,24 @@ namespace SWDISK_ALG
             }
         }
         
-        private double Compute()
+        private (double, List<Coordinate>) Compute()
         {
-            foreach (var cost in _permutations.Select(t => CalculateCost(t)))
+            var minimalPermutation = _permutations.First();
+            
+            foreach (var element in _permutations.Select(p =>
+            new {
+                cost = CalculateCost(p),
+                permutation = p    
+            }))
             {
-                if (cost < _minimalCost)
+                if (element.cost < _minimalCost)
                 {
-                    _minimalCost = cost;
+                    _minimalCost = element.cost;
+                    minimalPermutation = element.permutation;
                 }
             }
 
-            return _minimalCost;
+            return (_minimalCost, minimalPermutation);
         }
 
         private double CalculateCost(List<Coordinate> permutation)

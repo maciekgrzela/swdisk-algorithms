@@ -14,7 +14,13 @@ namespace SWDISK_ALG
         {
             (_coordinates, _throughputMatrix) = ReadData.Read();
             var bruteForce = new BruteForce(_coordinates, _throughputMatrix);
+            var nearestNeighbor = new NearestNeighbour(_coordinates, _throughputMatrix);
+            
             Console.WriteLine(bruteForce.Result);
+            bruteForce.ResultPath.VisualizePath();
+            
+            Console.WriteLine(nearestNeighbor.Result);
+            nearestNeighbor.ResultPath.VisualizePath();
         }
     }
 }
