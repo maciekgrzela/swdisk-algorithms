@@ -8,13 +8,19 @@ namespace SWDISK_ALG.Helpers
     {
         public static void VisualizePath(this List<Coordinate> list)
         {
-            foreach (var coord in list)
+            if (list.Count > 0)
             {
-                Console.Write($"{coord.Index} -> ");
+                foreach (var coord in list)
+                {
+                    Console.Write($"{coord.Index} -> ");
+                }
+            
+                Console.Write($"{list[0].Index}");
+                Console.WriteLine();
+                return;
             }
             
-            Console.Write($"{list[0].Index}");
-            Console.WriteLine();
+            Console.WriteLine("Empty coordinates list");
         }
     }
 }

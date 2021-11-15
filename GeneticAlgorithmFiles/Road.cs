@@ -4,7 +4,7 @@ using System.Linq;
 using SWDISK_ALG.Helpers;
 using SWDISK_ALG.Model;
 
-namespace SWDISK_ALG.GeneticAlgorithm
+namespace SWDISK_ALG.GeneticAlgorithmFiles
 {
     public class Road
     {

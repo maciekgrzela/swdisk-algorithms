@@ -65,33 +65,21 @@ namespace SWDISK_ALG
         private (double, List<Coordinate>) Compute()
         {
             var minimalPermutation = _permutations.First();
+            var minimalStr = minimalPermutation.Aggregate("", (current, minimal) => current + $"({minimal.Latitude},{minimal.Longitude}), ");
             
             foreach (var element in _permutations.Select(p =>
             new {
-                cost = CalculateCost(p),
+                cost = ComputeDistance.CalculateCost(p, _throughputMatrix),
                 permutation = p    
             }))
             {
-                if (element.cost < _minimalCost)
-                {
-                    _minimalCost = element.cost;
-                    minimalPermutation = element.permutation;
-                }
+                if (!(element.cost < _minimalCost)) continue;
+                
+                _minimalCost = element.cost;
+                minimalPermutation = element.permutation;
             }
 
             return (_minimalCost, minimalPermutation);
-        }
-
-        private double CalculateCost(List<Coordinate> permutation)
-        {
-            var cost = 0.0;
-            for (var i = 0; i < permutation.Count - 1; i++)
-            {
-                cost += ComputeDistance.ComputeDistanceAndThroughput(permutation[i], permutation[i + 1], _throughputMatrix);
-            }
-            cost += ComputeDistance.ComputeDistanceAndThroughput(permutation[^1], permutation[0], _throughputMatrix);
-
-            return cost;
         }
     }
 }

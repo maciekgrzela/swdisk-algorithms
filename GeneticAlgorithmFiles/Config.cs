@@ -1,4 +1,4 @@
-﻿namespace SWDISK_ALG.GeneticAlgorithm
+﻿namespace SWDISK_ALG.GeneticAlgorithmFiles
 {
     public static class Config
     {

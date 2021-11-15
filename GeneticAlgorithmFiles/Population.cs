@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SWDISK_ALG.Model;
 
-namespace SWDISK_ALG.GeneticAlgorithm
+namespace SWDISK_ALG.GeneticAlgorithmFiles
 {
     public class Population
     {
@@ -14,7 +14,7 @@ namespace SWDISK_ALG.GeneticAlgorithm
         private Population(List<Road> l)
         {
             p = l;
-            MaxFit = this.CalcMaxFit();
+            MaxFit = CalcMaxFit();
             RandomGenerator = new Random();
         }
 
@@ -74,7 +74,7 @@ namespace SWDISK_ALG.GeneticAlgorithm
 
         public Road FindBest()
         {
-            return this.p.FirstOrDefault(t => Math.Abs(t.FitnessRatio - this.MaxFit) < double.Epsilon);
+            return p.FirstOrDefault(t => Math.Abs(t.FitnessRatio - this.MaxFit) < double.Epsilon);
         }
 
         public Population Evolve()

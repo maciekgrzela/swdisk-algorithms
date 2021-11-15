@@ -2,7 +2,7 @@
 using System.Timers;
 using SWDISK_ALG.Model;
 
-namespace SWDISK_ALG.GeneticAlgorithm
+namespace SWDISK_ALG.GeneticAlgorithmFiles
 {
     public class GeneticAlgorithmThread
     {
@@ -10,7 +10,7 @@ namespace SWDISK_ALG.GeneticAlgorithm
         private static Timer _timer;
         private bool Timeout { get; set; }
         private List<Coordinate> Coordinates { get; set; }
-        private List<Coordinate> BestCoordinates { get; set; }
+        public List<Coordinate> BestCoordinates { get; set; }
 
         public GeneticAlgorithmThread(List<Coordinate> coordinates)
         {
@@ -19,7 +19,7 @@ namespace SWDISK_ALG.GeneticAlgorithm
             BestCoordinates = new List<Coordinate>();
             PrepareCoordinates(coordinates);
             Timeout = false;
-            _timer = new Timer(60000);
+            _timer = new Timer(5000);
             _timer.Elapsed += (sender, args) => Timeout = true;
             _timer.AutoReset = false;
         }
@@ -66,7 +66,7 @@ namespace SWDISK_ALG.GeneticAlgorithm
 
         private void PrepareBestRoadCoords()
         {
-            var i = 1;
+            var i = 0;
             if (_bestRoad == null) return;
             
             foreach (var coord in _bestRoad.Coordinates)
