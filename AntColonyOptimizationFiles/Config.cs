@@ -1,0 +1,14 @@
+﻿namespace SWDISK_ALG.AntColonyOptimizationFiles
+{
+    public static class Config
+    {
+        public static int Beta { get; set; }
+        public static double GlobalEvaporationRatio { get; set; }
+        public static double LocalEvaporationRatio { get; set; }
+        public static double Q0 { get; set; }
+        public static double T0 { get; set; }
+        public static int AntCount { get; set; }
+        public static int Iterations { get; set; }
+        public static double[,] ThroughputMatrix;
+    }
+}

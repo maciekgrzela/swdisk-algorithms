@@ -16,6 +16,7 @@ namespace SWDISK_ALG
             var bruteForce = new BruteForce(_coordinates, _throughputMatrix);
             var nearestNeighbor = new NearestNeighbour(_coordinates, _throughputMatrix);
             var geneticAlgorithm = new GeneticAlgorithm(_coordinates, _throughputMatrix);
+            var acoAlgorithm = new AntColonyOptimization(_coordinates, _throughputMatrix, nearestNeighbor.Result);
             
             Console.WriteLine(bruteForce.Result);
             bruteForce.ResultPath.VisualizePath();
@@ -25,6 +26,9 @@ namespace SWDISK_ALG
             
             Console.WriteLine(geneticAlgorithm.Result);
             geneticAlgorithm.ResultPath.VisualizePath();
+            
+            Console.WriteLine(acoAlgorithm.Result);
+            acoAlgorithm.ResultPath.VisualizePath();
         }
     }
 }
