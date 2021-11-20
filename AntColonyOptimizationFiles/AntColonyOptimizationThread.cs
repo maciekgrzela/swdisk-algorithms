@@ -49,7 +49,7 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
         public void Run()
         {
             Graph.ResetPheromone(Config.T0);
-            while (true)
+            while (!Timeout)
             {
                 var antColony = CreateAnts();
                 GlobalBestAnt ??= antColony[0];
