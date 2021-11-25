@@ -9,6 +9,6 @@
         public static double T0 { get; set; }
         public static int AntCount { get; set; }
         public static int Iterations { get; set; }
-        public static double[,] ThroughputMatrix;
+        public static double[,] ThroughputMatrix { get; set; }
     }
 }

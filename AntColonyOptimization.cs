@@ -29,13 +29,12 @@ namespace SWDISK_ALG
             {
                 Result = -1;
                 ResultPath = new List<Coordinate>();
+                Console.WriteLine(e.Message);
             }
         }
 
         private (double, List<Coordinate>) Compute()
         {
-            var graph = new Graph(_coordinates);
-            
             Config.Beta = 2;
             Config.GlobalEvaporationRatio = 0.1;
             Config.LocalEvaporationRatio = 0.01;
@@ -43,9 +42,10 @@ namespace SWDISK_ALG
             Config.AntCount = 20;
             Config.Iterations = 10000;
             Config.T0 = 1.0 / (_coordinates.Count * _twoOptResult);
+            Config.ThroughputMatrix = _throughputMatrix;
 
-            graph.MinimumPheromone = Config.T0;
-            
+            var graph = new Graph(_coordinates, Config.T0);
+
             var thread = new AntColonyOptimizationThread(_coordinates, graph);
 
             var runnableThread = new Thread(thread.Run);

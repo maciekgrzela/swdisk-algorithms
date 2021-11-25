@@ -14,7 +14,7 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
         private bool Timeout { get; set; }
         private List<Coordinate> Coordinates { get; set; }
         public List<Coordinate> BestCoordinates { get; set; }
-        public List<double> Results { get; set; }
+        private List<double> Results { get; set; }
         private Graph Graph { get; set; }
         public Ant GlobalBestAnt { get; set; }
 
@@ -23,6 +23,7 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
             Graph = graph;
             Coordinates = new List<Coordinate>();
             BestCoordinates = new List<Coordinate>();
+            Results = new List<double>();
             PrepareCoordinates(coordinates);
             Timeout = false;
             _timer = new Timer(5000);
@@ -49,6 +50,9 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
         public void Run()
         {
             Graph.ResetPheromone(Config.T0);
+            
+            _timer.Start();
+            
             while (!Timeout)
             {
                 var antColony = CreateAnts();
@@ -61,12 +65,14 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
                 }
                 Results.Add(localBestAnt.Distance);
             }
+
+            BestCoordinates = GlobalBestAnt.VisitedCoordinates;
         }
-        
-        public List<Ant> CreateAnts()
+
+        private List<Ant> CreateAnts()
         {
             var antColony = new List<Ant>();
-            var randomPoints = RandomGenerator.GenerateRandom(Config.AntCount, 1, Graph.Dimensions);
+            var randomPoints = RandomGenerator.GenerateRandom(Config.AntCount, 0, Graph.Dimensions - 1);
             foreach (var random in randomPoints)
             {
                 var ant = new Ant(Graph, Config.Beta, Config.Q0);
@@ -75,8 +81,8 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
             }
             return antColony;
         }
-        
-        public Ant BuildTours(List<Ant> antColony)
+
+        private Ant BuildTours(List<Ant> antColony)
         {
             for (var i = 0; i < Graph.Dimensions; i++)
             {
@@ -91,17 +97,17 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
 
             return antColony.OrderBy(x => x.Distance).FirstOrDefault();
         }
-        
-        public void LocalUpdate(Edge edge)
+
+        private void LocalUpdate(Edge edge)
         {
-            var evaporate = (1 - Config.LocalEvaporationRatio);
+            var evaporate = 1 - Config.LocalEvaporationRatio;
             Graph.EvaporatePheromone(edge, evaporate);
 
             var deposit = Config.LocalEvaporationRatio * Config.T0;
             Graph.DepositPheromone(edge, deposit);
         }
-        
-        public void GlobalUpdate()
+
+        private void GlobalUpdate()
         {
             var deltaR = 1 / GlobalBestAnt.Distance;
             foreach (var edge in GlobalBestAnt.Road)

@@ -17,6 +17,7 @@ namespace SWDISK_ALG
             var nearestNeighbor = new NearestNeighbour(_coordinates, _throughputMatrix);
             var geneticAlgorithm = new GeneticAlgorithm(_coordinates, _throughputMatrix);
             var simulatedAnnealingAlgorithm = new SimulatedAnnealing(_coordinates, _throughputMatrix);
+            var antColonyOptimizationAlgorithm = new AntColonyOptimization(_coordinates, _throughputMatrix, nearestNeighbor.Result);
             
             Console.WriteLine(bruteForce.Result);
             bruteForce.ResultPath.VisualizePath();
@@ -29,6 +30,9 @@ namespace SWDISK_ALG
             
             Console.WriteLine(simulatedAnnealingAlgorithm.Result);
             simulatedAnnealingAlgorithm.ResultPath.VisualizePath();
+            
+            Console.WriteLine(antColonyOptimizationAlgorithm.Result);
+            antColonyOptimizationAlgorithm.ResultPath.VisualizePath();
         }
     }
 }

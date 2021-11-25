@@ -12,12 +12,30 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
         public int Dimensions { get; set; }
         public double MinimumPheromone { get; set; }
         
-        public Graph(List<Coordinate> coordinates)
+        public Graph(List<Coordinate> coordinates, double minimumPheromone)
         {
             Edges = new Dictionary<string, Edge>();
-            Coordinates = coordinates;
+            Coordinates = new List<Coordinate>();
+            PrepareCoordinates(coordinates);
+            MinimumPheromone = minimumPheromone;
             Dimensions = Coordinates.Count;
             ConstructEdges();
+        }
+        
+        private void PrepareCoordinates(List<Coordinate> coordinates)
+        {
+            var i = 0;
+            foreach (var coordinate in coordinates)
+            {
+                var coord = new Coordinate
+                {
+                    Index = i,
+                    Latitude = coordinate.Latitude,
+                    Longitude = coordinate.Longitude
+                };
+                Coordinates.Add(coord);
+                i++;
+            }
         }
         
         private void ConstructEdges()

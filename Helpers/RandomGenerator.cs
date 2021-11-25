@@ -16,9 +16,9 @@ namespace SWDISK_ALG.Helpers
             return Instance.Random.NextDouble() * (maximum - minimum) + minimum;
         }
 
-        public static List<int> GenerateRandom(int count, int min, int max)
+        public static IEnumerable<int> GenerateRandom(int count, int min, int max)
         {
-            return Enumerable.Range(min, max).OrderBy(x => Instance.Random.Next()).Take(count).ToList();
+            return Enumerable.Range(min, max).OrderBy(_ => Instance.Random.Next()).Take(count).ToList();
         }
     }
 }
