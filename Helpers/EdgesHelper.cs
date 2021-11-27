@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -16,13 +17,14 @@ namespace SWDISK_ALG.Helpers
                 .Replace("-", string.Empty);
         }
         
+        [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
         public static string GenerateName(int index1, int index2)
         {
             return BitConverter.ToString(new SHA256Managed().ComputeHash(Encoding.UTF8.GetBytes($"{index1}to{index2}")))
                 .Replace("-", string.Empty);
         }
         
-        public static List<Edge> EdgeCumulativeSum(List<Edge> sequence)
+        public static IEnumerable<Edge> EdgeCumulativeSum(List<Edge> sequence)
         {
             double sum = 0;
             foreach (var item in sequence)

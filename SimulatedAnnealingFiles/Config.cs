@@ -2,8 +2,8 @@
 {
     public static class Config
     {
-        public static double StartingTemperature;
-        public static double CoolingRate;
-        public static double[,] ThroughputMatrix;
+        public static double StartingTemperature { get; set; }
+        public static double CoolingRate { get; set; }
+        public static double[,] ThroughputMatrix { get; set; }
     }
 }

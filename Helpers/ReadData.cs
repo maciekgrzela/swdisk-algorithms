@@ -9,9 +9,8 @@ namespace SWDISK_ALG.Helpers
         public static (List<Coordinate>, double[,]) Read()
         {
             var returnedCoords = new List<Coordinate>();
-            var coordsCount = 0;
             Console.WriteLine("Podaj liczbę koordynatów: ");
-            coordsCount = Convert.ToInt32(Console.ReadLine());
+            var coordsCount = Convert.ToInt32(Console.ReadLine());
             var returnedThroughputMatrix = new double[coordsCount, coordsCount]; 
 
             for (var i = 0; i < coordsCount; i++)

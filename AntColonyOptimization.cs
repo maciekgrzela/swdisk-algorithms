@@ -40,7 +40,6 @@ namespace SWDISK_ALG
             Config.LocalEvaporationRatio = 0.01;
             Config.Q0 = 0.9;
             Config.AntCount = 20;
-            Config.Iterations = 10000;
             Config.T0 = 1.0 / (_coordinates.Count * _twoOptResult);
             Config.ThroughputMatrix = _throughputMatrix;
 

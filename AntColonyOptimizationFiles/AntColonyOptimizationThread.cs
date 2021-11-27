@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
-using SWDISK_ALG.GeneticAlgorithmFiles;
 using SWDISK_ALG.Helpers;
 using SWDISK_ALG.Model;
 
@@ -12,26 +11,24 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
     {
         private static Timer _timer;
         private bool Timeout { get; set; }
-        private List<Coordinate> Coordinates { get; set; }
-        public List<Coordinate> BestCoordinates { get; set; }
-        private List<double> Results { get; set; }
+        private List<Coordinate> Coordinates { get; }
+        public List<Coordinate> BestCoordinates { get; private set; }
         private Graph Graph { get; set; }
-        public Ant GlobalBestAnt { get; set; }
+        private Ant GlobalBestAnt { get; set; }
 
         public AntColonyOptimizationThread(List<Coordinate> coordinates, Graph graph)
         {
             Graph = graph;
             Coordinates = new List<Coordinate>();
             BestCoordinates = new List<Coordinate>();
-            Results = new List<double>();
             PrepareCoordinates(coordinates);
             Timeout = false;
             _timer = new Timer(5000);
-            _timer.Elapsed += (sender, args) => Timeout = true;
+            _timer.Elapsed += (_, _) => Timeout = true;
             _timer.AutoReset = false;
         }
 
-        private void PrepareCoordinates(List<Coordinate> coordinates)
+        private void PrepareCoordinates(IEnumerable<Coordinate> coordinates)
         {
             var i = 0;
             foreach (var coordinate in coordinates)
@@ -63,7 +60,6 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
                 {
                     GlobalBestAnt = localBestAnt;
                 }
-                Results.Add(localBestAnt.Distance);
             }
 
             BestCoordinates = GlobalBestAnt.VisitedCoordinates;

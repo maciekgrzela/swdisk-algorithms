@@ -2,8 +2,8 @@
 {
     public class Coordinate
     {
-        public int Index { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public int Index { get; init; }
+        public double Latitude { get; init; }
+        public double Longitude { get; init; }
     }
 }

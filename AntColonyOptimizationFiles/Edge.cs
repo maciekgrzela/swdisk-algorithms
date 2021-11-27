@@ -5,9 +5,9 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
 {
     public class Edge
     {
-        public Coordinate Start { get; set; }
-        public Coordinate End { get; set; }
-        public double Length { get; set; }
+        public Coordinate Start { get; }
+        public Coordinate End { get; }
+        public double Length { get; }
         public double Pheromone { get; set; }
         public double Weight { get; set; }
 

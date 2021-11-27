@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Timers;
 using SWDISK_ALG.Model;
 
@@ -9,8 +11,8 @@ namespace SWDISK_ALG.GeneticAlgorithmFiles
         private Road _bestRoad;
         private static Timer _timer;
         private bool Timeout { get; set; }
-        private List<Coordinate> Coordinates { get; set; }
-        public List<Coordinate> BestCoordinates { get; set; }
+        private List<Coordinate> Coordinates { get; }
+        public List<Coordinate> BestCoordinates { get; }
 
         public GeneticAlgorithmThread(List<Coordinate> coordinates)
         {
@@ -20,11 +22,11 @@ namespace SWDISK_ALG.GeneticAlgorithmFiles
             PrepareCoordinates(coordinates);
             Timeout = false;
             _timer = new Timer(5000);
-            _timer.Elapsed += (sender, args) => Timeout = true;
+            _timer.Elapsed += (_, _) => Timeout = true;
             _timer.AutoReset = false;
         }
 
-        private void PrepareCoordinates(List<Coordinate> coordinates)
+        private void PrepareCoordinates(IEnumerable<Coordinate> coordinates)
         {
             var i = 0;
             foreach (var coordinate in coordinates)
@@ -40,25 +42,26 @@ namespace SWDISK_ALG.GeneticAlgorithmFiles
             }
         }
 
+        [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
         public void Run()
         {
             var startSolution = new Road(Coordinates);
             var population = Population.Randomized(startSolution, Config.PopulationSize);
-            var better = true;
+            var betterPopulationExists = true;
             
             _timer.Start();
             
             while (!Timeout)
             {
-                if (better)
+                if (betterPopulationExists)
                     SetBestRoad(population);
             
-                better = false;
-                var oldFit = population.MaxFit;
+                betterPopulationExists = false;
+                var oldFitnessFunctionVal = population.MaximumFitness;
             
                 population = population.Evolve();
-                if (population.MaxFit > oldFit)
-                    better = true;
+                if (population.MaximumFitness > oldFitnessFunctionVal)
+                    betterPopulationExists = true;
             }
 
             PrepareBestRoadCoords();
@@ -69,22 +72,21 @@ namespace SWDISK_ALG.GeneticAlgorithmFiles
             var i = 0;
             if (_bestRoad == null) return;
             
-            foreach (var coord in _bestRoad.Coordinates)
+            foreach (var bestCoord in _bestRoad.Coordinates.Select(coord => new Coordinate
             {
-                var bestCoord = new Coordinate
-                {
-                    Index = i,
-                    Latitude = coord.Latitude,
-                    Longitude = coord.Longitude
-                };
+                Index = i,
+                Latitude = coord.Latitude,
+                Longitude = coord.Longitude
+            }))
+            {
                 BestCoordinates.Add(bestCoord);
                 i++;
             }
         }
 
-        private void SetBestRoad(Population p)
+        private void SetBestRoad(Population population)
         {
-            Road best = p.FindBest();
+            var best = population.FindBest();
             _bestRoad = best;
         }
     }

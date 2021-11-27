@@ -1,72 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SWDISK_ALG.Model;
+using SWDISK_ALG.Helpers;
 
 namespace SWDISK_ALG.GeneticAlgorithmFiles
 {
     public class Population
     {
-        private List<Road> p { get; set; }
-        public double MaxFit { get; private set; }
-        private static Random RandomGenerator { get; set; }
+        private List<Road> Roads { get; set; }
+        public double MaximumFitness { get; private set; }
 
-        private Population(List<Road> l)
+        private Population(List<Road> roads)
         {
-            p = l;
-            MaxFit = CalcMaxFit();
-            RandomGenerator = new Random();
+            Roads = roads;
+            MaximumFitness = ComputeMaximumFitness();
         }
 
-        public static Population Randomized(Road t, int n)
+        public static Population Randomized(Road road, int times)
         {
-            var tmp = new List<Road>();
+            var newRoad = new List<Road>();
 
-            for (var i = 0; i < n; ++i)
-                tmp.Add( t.Rearrange() );
+            for (var i = 0; i < times; ++i)
+                newRoad.Add( road.Rearrange() );
 
-            return new Population(tmp);
+            return new Population(newRoad);
         }
 
-        private double CalcMaxFit() => p.Max( t => t.FitnessRatio );
+        private double ComputeMaximumFitness()
+        {
+            return Roads.Max(t => t.FitnessRatio);   
+        }
 
         private Road Select()
         {
             while (true)
             {
-                var i = RandomGenerator.Next(0, Config.PopulationSize);
+                var index = RandomGenerator.GetRandomInt(0, Config.PopulationSize);
 
-                if (RandomGenerator.NextDouble() < p[i].FitnessRatio / MaxFit)
-                    return new Road(p[i].Coordinates);
+                if (RandomGenerator.Instance.Random.NextDouble() < Roads[index].FitnessRatio / MaximumFitness)
+                    return new Road(Roads[index].Coordinates);
             }
         }
 
-        private Population GenNewPop(int n)
+        private Population GenerateNewPopulation(int individuals)
         {
-            var p = new List<Road>();
+            var population = new List<Road>();
 
-            for (var i = 0; i < n; ++i)
+            for (var i = 0; i < individuals; ++i)
             {
-                var t = Select().PerformCrossing( Select() );
+                var road = Select().PerformCrossing(Select());
 
-                foreach (var unused in t.Coordinates)
-                    t = t.PerformMutation();
+                foreach (var unused in road.Coordinates)
+                    road = road.PerformMutation();
 
-                p.Add(t);
+                population.Add(road);
             }
 
-            return new Population(p);
+            return new Population(population);
         }
 
-        private Population Elite(int n)
+        private Population Elite(int dominants)
         {
             var best = new List<Road>();
-            var tmp = new Population(p);
+            var population = new Population(Roads);
 
-            for (var i = 0; i < n; ++i)
+            for (var i = 0; i < dominants; ++i)
             {
-                best.Add( tmp.FindBest() );
-                tmp = new Population( tmp.p.Except(best).ToList() );
+                best.Add(population.FindBest());
+                population = new Population(population.Roads.Except(best).ToList());
             }
 
             return new Population(best);
@@ -74,14 +75,14 @@ namespace SWDISK_ALG.GeneticAlgorithmFiles
 
         public Road FindBest()
         {
-            return p.FirstOrDefault(t => Math.Abs(t.FitnessRatio - this.MaxFit) < double.Epsilon);
+            return Roads.FirstOrDefault(t => Math.Abs(t.FitnessRatio - MaximumFitness) < double.Epsilon);
         }
 
         public Population Evolve()
         {
-            var best = this.Elite(Config.NumberOfDominantsInNextGeneration);
-            var np = this.GenNewPop(Config.PopulationSize - Config.NumberOfDominantsInNextGeneration);
-            return new Population( best.p.Concat(np.p).ToList() );
+            var bestPopulation = Elite(Config.NumberOfDominantsInNextGeneration);
+            var newPopulationGenerated = GenerateNewPopulation(Config.PopulationSize - Config.NumberOfDominantsInNextGeneration);
+            return new Population(bestPopulation.Roads.Concat(newPopulationGenerated.Roads).ToList());
         }
     }
 }

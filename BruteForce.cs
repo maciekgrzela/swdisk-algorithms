@@ -65,7 +65,6 @@ namespace SWDISK_ALG
         private (double, List<Coordinate>) Compute()
         {
             var minimalPermutation = _permutations.First();
-            var minimalStr = minimalPermutation.Aggregate("", (current, minimal) => current + $"({minimal.Latitude},{minimal.Longitude}), ");
             
             foreach (var element in _permutations.Select(p =>
             new {

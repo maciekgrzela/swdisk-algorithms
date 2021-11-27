@@ -7,10 +7,10 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
 {
     public class Graph
     {
-        public List<Coordinate> Coordinates { get; set; }
-        public Dictionary<string, Edge> Edges { get; set; }
-        public int Dimensions { get; set; }
-        public double MinimumPheromone { get; set; }
+        public List<Coordinate> Coordinates { get; }
+        private Dictionary<string, Edge> Edges { get; }
+        public int Dimensions { get; }
+        private double MinimumPheromone { get; }
         
         public Graph(List<Coordinate> coordinates, double minimumPheromone)
         {
@@ -22,7 +22,7 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
             ConstructEdges();
         }
         
-        private void PrepareCoordinates(List<Coordinate> coordinates)
+        private void PrepareCoordinates(IEnumerable<Coordinate> coordinates)
         {
             var i = 0;
             foreach (var coordinate in coordinates)

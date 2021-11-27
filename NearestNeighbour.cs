@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using SWDISK_ALG.Helpers;
 using SWDISK_ALG.Model;
@@ -8,10 +7,10 @@ namespace SWDISK_ALG
 {
     public class NearestNeighbour
     {
-        private List<Coordinate> _coordinates;
+        private readonly List<Coordinate> _coordinates;
         private readonly double[,] _throughputMatrix;
-        public double Result { get; private set; }
-        public List<Coordinate> ResultPath { get; private set; }
+        public double Result { get; }
+        public List<Coordinate> ResultPath { get; }
 
         public NearestNeighbour(List<Coordinate> coordinates, double[,] throughputMatrix)
         {
@@ -22,8 +21,10 @@ namespace SWDISK_ALG
 
         private (double, List<Coordinate>) Compute()
         {
-            var minimalPath = new List<Coordinate>();
-            minimalPath.Add(_coordinates.First());
+            var minimalPath = new List<Coordinate>
+            {
+                _coordinates.First()
+            };
             var minimalResult = 0.0;
             var visited = new int[_coordinates.Count];
             visited[0] = 1;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using SWDISK_ALG.Helpers;
 using SWDISK_ALG.Model;
@@ -8,18 +7,14 @@ namespace SWDISK_ALG.GeneticAlgorithmFiles
 {
     public class Road
     {
-        private double Distance { get; set; } = 0.0;
-        public double FitnessRatio { get; set; }
-        public List<Coordinate> Coordinates { get; set; }
-
-        private static Random RandomGenerator { get; set; }
-
+        private double Distance { get; set; }
+        public double FitnessRatio { get; private set; }
+        public List<Coordinate> Coordinates { get; }
 
         public Road(List<Coordinate> coordinates)
         {
             Coordinates = coordinates;
             PrepareRoadParams();
-            RandomGenerator = new Random();
         }
 
         private void PrepareRoadParams()
@@ -50,68 +45,59 @@ namespace SWDISK_ALG.GeneticAlgorithmFiles
 
             return 1.0 / Distance;
         }
-        
-        public override string ToString()
-        {
-            var roadString = Coordinates.Aggregate(string.Empty, (current, t) => current + $"{t} -> ");
-            roadString += $"{Coordinates[0]}";
-            return roadString;
-        }
 
         public Road PerformMutation()
         {
             var coords = new List<Coordinate>(Coordinates);
-            var prob = RandomGenerator.NextDouble();
-            Road road = null;
+            var mutationProbability = RandomGenerator.Instance.Random.NextDouble();
 
-            if (Config.MutationProbability > prob)
+            if (Config.MutationProbability > mutationProbability)
             {
-                var swappedIndexOne = RandomGenerator.Next(0, Coordinates.Count);
-                var swappedIndexTwo = RandomGenerator.Next(0, Coordinates.Count);
+                var swappedIndexOne =  RandomGenerator.GetRandomInt(0, Coordinates.Count);
+                var swappedIndexTwo = RandomGenerator.GetRandomInt(0, Coordinates.Count);
 
                 var temp = coords[swappedIndexOne];
                 coords[swappedIndexOne] = coords[swappedIndexTwo];
                 coords[swappedIndexTwo] = temp;
             }
             
-            road = new Road(coords);
+            var road = new Road(coords);
             
             return road;
         }
 
         public Road PerformCrossing(Road road)
         {
-            var i = RandomGenerator.Next(0, road.Coordinates.Count);
-            var j = RandomGenerator.Next(i, road.Coordinates.Count);
-            Road returnedRoad = null;
-            
-            var s = Coordinates.GetRange(i, j - i + 1);
-            var ms = road.Coordinates.Except(s).ToList();
-            var c = ms.Take(i)
-                .Concat(s)
-                .Concat( ms.Skip(i) )
+            var firstPoint = RandomGenerator.GetRandomInt(0, road.Coordinates.Count);
+            var secondPoint = RandomGenerator.GetRandomInt(firstPoint, road.Coordinates.Count);
+
+            var firstPart = Coordinates.GetRange(firstPoint, secondPoint - firstPoint + 1);
+            var exceptFirstPart = road.Coordinates.Except(firstPart).ToList();
+            var permutation = exceptFirstPart.Take(firstPoint)
+                .Concat(firstPart)
+                .Concat( exceptFirstPart.Skip(firstPoint) )
                 .ToList();
             
-            returnedRoad = new Road(c);
+            var returnedRoad = new Road(permutation);
             
             return returnedRoad;
         }
 
         public Road Rearrange()
         {
-            var tmp = new List<Coordinate>(Coordinates);
-            var n = tmp.Count;
+            var coords = new List<Coordinate>(Coordinates);
+            var coordsCount = coords.Count;
 
-            while (n > 1)
+            while (coordsCount > 1)
             {
-                n--;
-                var k = RandomGenerator.Next( n + 1);
-                var v = tmp[k];
-                tmp[k] = tmp[n];
-                tmp[n] = v;
+                coordsCount--;
+                var first = RandomGenerator.Instance.Random.Next(coordsCount + 1);
+                var v = coords[first];
+                coords[first] = coords[coordsCount];
+                coords[coordsCount] = v;
             }
 
-            return new Road(tmp);
+            return new Road(coords);
         }
     }
 }

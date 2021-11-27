@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using SWDISK_ALG.Helpers;
 using SWDISK_ALG.Model;
@@ -10,14 +8,13 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
 {
     public class Ant
     {
-        public Graph Graph { get; set; }
-        public int Beta { get; set; }
-        public double Q0 { get; set; }
-        public int StartNodeId { get; set; }
-        public double Distance { get; set; }
-        public List<Coordinate> VisitedCoordinates { get; set; }
-        public List<Coordinate> UnvisitedCoordinates { get; set; }
-        public List<Edge> Road { get; set; }
+        private Graph Graph { get; }
+        private int Beta { get; }
+        private double Q0 { get; }
+        public double Distance { get; private set; }
+        public List<Coordinate> VisitedCoordinates { get; }
+        private List<Coordinate> UnvisitedCoordinates { get; set; }
+        public List<Edge> Road { get; }
         
         
         public Ant(Graph graph, int beta, double q0)
@@ -30,25 +27,19 @@ namespace SWDISK_ALG.AntColonyOptimizationFiles
             Road = new List<Edge>();
         }
         
-        public void Init(int startNodeId)
+        public void Init(int startNodeIndex)
         {
-            StartNodeId = startNodeId;
             Distance = 0;
-            VisitedCoordinates.Add(Graph.Coordinates.First(x => x.Index == startNodeId));
-            UnvisitedCoordinates = Graph.Coordinates.Where(x => x.Index != startNodeId).ToList();
+            VisitedCoordinates.Add(Graph.Coordinates.First(x => x.Index == startNodeIndex));
+            UnvisitedCoordinates = Graph.Coordinates.Where(x => x.Index != startNodeIndex).ToList();
             Road.Clear();
         }
-        
-        public Coordinate CurrentCoordinate()
+
+        private Coordinate CurrentCoordinate()
         {
             return VisitedCoordinates[^1];
         }
 
-        public bool CanMove()
-        {
-            return VisitedCoordinates.Count != Road.Count;
-        }
-        
         public Edge Move()
         {
             Coordinate endCoordinate;
