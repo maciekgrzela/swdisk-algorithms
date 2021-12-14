@@ -3,15 +3,17 @@ import numpy as np
 import os
 from scipy.spatial import distance
 
-for filename in os.listdir("C:\Projects\SWDISK\scripts\SWDISK_TSP"):
+directory = os.getcwd() + "\SWDISK_TSP"
+for filename in os.listdir(directory):
 
     file_to_read = filename
-    file_content = ""
 
     print("Wczytuję ", file_to_read)
 
+    file_to_open = directory + '\\' + file_to_read
+
     try:
-        handler = open(file_to_read, "r")
+        handler = open(file_to_open, "r")
         file_content = handler.read()
         handler.close()
     except IOError:
@@ -50,6 +52,10 @@ for filename in os.listdir("C:\Projects\SWDISK\scripts\SWDISK_TSP"):
     createFile = True
 
     for row_index, row in enumerate(throughput_matrix):
+
+        if(createFile != True):
+            break
+
         for column_index, column in enumerate(row):
             if row_index != column_index:
                 file_point_distance = distance.euclidean((df_file.iloc[row_index]["X_COORD"], df_file.iloc[row_index]["Y_COORD"]), (df_file.iloc[column_index]["X_COORD"], df_file.iloc[column_index]["Y_COORD"]))
@@ -59,10 +65,12 @@ for filename in os.listdir("C:\Projects\SWDISK\scripts\SWDISK_TSP"):
                 else:
                     createFile = False
                     print("Dzielenie przez zero, transformed_point_distance = ", transformed_point_distance, "file_point_distance = ", file_point_distance)
+                    break
 
 
     if(createFile):
-        file_to_write = open(file_to_read+"_transformed.txt", "w+")
+        directory_to_write =  os.getcwd() + "\SWDISK_TXT\\"
+        file_to_write = open(directory_to_write+filename+"_transformed.txt", "w+")
         file_to_write.seek(0)
         file_to_write.truncate()
 
