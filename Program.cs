@@ -12,6 +12,7 @@ namespace SWDISK_ALG
         
         static void Main(string[] args)
         {
+            // (_coordinates, _throughputMatrix) = ReadData.ReadFromFile(Console.ReadLine());
             (_coordinates, _throughputMatrix) = ReadData.Read();
             var bruteForce = new BruteForce(_coordinates, _throughputMatrix);
             var nearestNeighbor = new NearestNeighbour(_coordinates, _throughputMatrix);
