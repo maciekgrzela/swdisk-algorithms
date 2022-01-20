@@ -30,14 +30,31 @@ namespace SWDISK_ALG
                 Console.WriteLine(e.StackTrace);
             }
         }
-
-        private (double, List<Coordinate>) Compute()
+        
+        public GeneticAlgorithm(List<Coordinate> coordinates, double[,] throughputMatrix, double mutationProbability, int populationSize, int dominants)
         {
-            Config.MutationProbability = 0.01;
-            Config.PopulationSize = Convert.ToInt32(Math.Floor(0.75 * Convert.ToDouble(_coordinates.Count)));
+            _coordinates = coordinates;
+            _throughputMatrix = throughputMatrix;
+            try
+            {
+                (Result, ResultPath) = Compute(mutationProbability, populationSize, dominants);
+            }
+            catch (Exception e)
+            {
+                Result = -1;
+                ResultPath = new List<Coordinate>();
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        private (double, List<Coordinate>) Compute(double mutationProbability = 0, int populationSize = 0, int dominants = 0)
+        {
+            Config.MutationProbability = mutationProbability == 0 ? 0.01 : mutationProbability;
+            Config.PopulationSize = populationSize == 0 ? Convert.ToInt32(Math.Floor(0.75 * Convert.ToDouble(_coordinates.Count))) : populationSize;
             Config.NumberOfCoordinates = _coordinates.Count;
             Config.NumberOfDominantsInNextGeneration =
-                Convert.ToInt32(Math.Floor(0.25 * Convert.ToDouble(_coordinates.Count)));
+                dominants == 0 ? Convert.ToInt32(Math.Floor(0.25 * Convert.ToDouble(_coordinates.Count))) : dominants;
             Config.ThroughputMatrix = _throughputMatrix;
 
             var thread = new GeneticAlgorithmThread(_coordinates);

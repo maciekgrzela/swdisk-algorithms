@@ -8,4 +8,11 @@
         public static int PopulationSize { get; set; }
         public static double[,] ThroughputMatrix { get; set; }
     }
+
+    public class OverridenConfig
+    {
+        public double MutationProbability { get; set; }
+        public int NumberOfDominantsInNextGeneration { get; set; }
+        public int PopulationSize { get; set; }
+    }
 }

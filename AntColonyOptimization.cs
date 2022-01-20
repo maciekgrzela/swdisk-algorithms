@@ -32,15 +32,33 @@ namespace SWDISK_ALG
                 Console.WriteLine(e.Message);
             }
         }
-
-        private (double, List<Coordinate>) Compute()
+        
+        public AntColonyOptimization(List<Coordinate> coordinates, double[,] throughputMatrix, double twoOptResult, int beta, double globalEvaporationRatio, double localEvaporationRatio, double q0, int antCount, double t0)
         {
-            Config.Beta = 2;
-            Config.GlobalEvaporationRatio = 0.1;
-            Config.LocalEvaporationRatio = 0.01;
-            Config.Q0 = 0.9;
-            Config.AntCount = 20;
-            Config.T0 = 1.0 / (_coordinates.Count * _twoOptResult);
+            _coordinates = coordinates;
+            _throughputMatrix = throughputMatrix;
+            _twoOptResult = twoOptResult;
+            
+            try
+            {
+                (Result, ResultPath) = Compute(beta, globalEvaporationRatio, localEvaporationRatio, q0, antCount, t0);
+            }
+            catch (Exception e)
+            {
+                Result = -1;
+                ResultPath = new List<Coordinate>();
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private (double, List<Coordinate>) Compute(int beta = 0, double globalEvaporationRatio = 0, double localEvaporationRatio = 0, double q0 = 0, int antCount = 0, double t0 = 0)
+        {
+            Config.Beta = beta == 0 ? 2 : beta;
+            Config.GlobalEvaporationRatio = globalEvaporationRatio == 0 ? 0.1 : globalEvaporationRatio;
+            Config.LocalEvaporationRatio = localEvaporationRatio == 0 ? 0.01 : localEvaporationRatio;
+            Config.Q0 = q0 == 0 ? 0.9 : q0;
+            Config.AntCount = antCount == 0 ? 20 : antCount;
+            Config.T0 = t0 == 0 ? 1.0 / (_coordinates.Count * _twoOptResult) : t0;
             Config.ThroughputMatrix = _throughputMatrix;
 
             var graph = new Graph(_coordinates, Config.T0);

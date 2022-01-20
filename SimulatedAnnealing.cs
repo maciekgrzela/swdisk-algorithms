@@ -31,11 +31,29 @@ namespace SWDISK_ALG
                 Console.WriteLine(e.StackTrace);
             }
         }
-
-        private (double, List<Coordinate>) Compute()
+        
+        public SimulatedAnnealing(List<Coordinate> coordinates, double[,] throughputMatrix, double startTemp, double coolingRate)
         {
-            Config.StartingTemperature = 10000.0;
-            Config.CoolingRate = 0.9999;
+            _coordinates = coordinates;
+            _throughputMatrix = throughputMatrix;
+            
+            try
+            {
+                (Result, ResultPath) = Compute(startTemp, coolingRate);
+            }
+            catch (Exception e)
+            {
+                Result = -1;
+                ResultPath = new List<Coordinate>();
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        private (double, List<Coordinate>) Compute(double startTemp = 0, double coolingRate = 0)
+        {
+            Config.StartingTemperature = startTemp == 0 ? 10000.0 : startTemp;
+            Config.CoolingRate = coolingRate == 0 ? 0.990 : coolingRate;
             Config.ThroughputMatrix = _throughputMatrix;
 
             var thread = new SimulatedAnnealingThread(_coordinates);
